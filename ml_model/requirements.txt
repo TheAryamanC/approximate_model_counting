@@ -1,0 +1,2 @@
+# Python dependencies for machine learning model
+# PyTorch/TensorFlow, NumPy, scikit-learn, etc.
