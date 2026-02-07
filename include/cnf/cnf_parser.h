@@ -31,7 +31,7 @@ private:
     static bool parseProblemLine(const std::string& line, int& numVars, int& numClauses);
     
     // parse a clause line (integers - 0 denotes end of clause)
-    static Clause parseClause(const std::string& line);
+    static Clause parseClause(const std::string& line, CNFFormula& formula);
 };
 
 #endif // CNF_PARSER_H

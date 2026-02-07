@@ -354,12 +354,28 @@ void testParseFile_errorInvalidFileContent() {
     deleteTestFile(testFile);
 }
 
+void testParseFile_errorInvalidExtension() {
+    string testFile = "test_file.txt";
+    createTestFile(testFile, 
+        "p cnf 2 1\n"
+        "1 2 0\n");
+    
+    try {
+        CNFParser::parseFile(testFile);
+        assert(false && "Should have thrown exception for invalid file extension");
+    } catch (const runtime_error& e) {
+        assert(string(e.what()).find(".cnf extension") != string::npos);
+    }
+    deleteTestFile(testFile);
+}
+
 // Orchestrator function for parseFile tests
 void testParseFile() {
     cout << "Testing parseFile..." << endl;
     testParseFile_validFile();
     testParseFile_errorFileNotFound();
     testParseFile_errorInvalidFileContent();
+    testParseFile_errorInvalidExtension();
     cout << "  All parseFile tests passed!" << endl;
 }
 

@@ -35,6 +35,7 @@ public:
     int numVariables;
     int numClauses;
     std::vector<Clause> clauses;
+    std::unordered_set<int> variablesSeen;
     
     CNFFormula() : numVariables(0), numClauses(0) {}
     CNFFormula(int vars, int cls) : numVariables(vars), numClauses(cls) {}

@@ -76,6 +76,7 @@ bool CNFFormula::isSatisfied(const std::vector<int>& assignment) const {
 // STL containers have clear() method that deallocates memory, so we can just call that and reset counts
 void CNFFormula::clear() {
     clauses.clear();
+    variablesSeen.clear();
     numVariables = 0;
     numClauses = 0;
 }

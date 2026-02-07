@@ -19,6 +19,11 @@ bool CNFParser::validateFile(const std::string& filename) {
 }
 
 unique_ptr<CNFFormula> CNFParser::parseFile(const std::string& filename) {
+    // file must end with .cnf
+    if (filename.length() < 4 || filename.substr(filename.length() - 4) != ".cnf") {
+        throw runtime_error("File " + filename + " must have .cnf extension");
+    }
+    
     ifstream file(filename);
     if (!file.is_open()) {
         throw runtime_error("File " + filename + " not found");
@@ -71,7 +76,7 @@ unique_ptr<CNFFormula> CNFParser::parseString(const std::string& content) {
         }
         
         // add all clauses to the formula
-        Clause clause = parseClause(line);
+        Clause clause = parseClause(line, *formula);
         if (!clause.empty()) {
             formula->addClause(clause);
             parsedClauses++;
@@ -91,9 +96,8 @@ unique_ptr<CNFFormula> CNFParser::parseString(const std::string& content) {
         throw runtime_error("Number of clauses parsed (" + to_string(parsedClauses) + ") does not match expected number of clauses (" + to_string(expectedClauses) + ")");
     }
     //// number of variables
-    unordered_set<int> variables = formula->getVariables();
-    if (static_cast<int>(variables.size()) != formula->numVariables) {
-        throw runtime_error("Number of variables parsed (" + to_string(variables.size()) + ") does not match expected number of variables (" + to_string(formula->numVariables) + ")");
+    if (static_cast<int>(formula->variablesSeen.size()) != formula->numVariables) {
+        throw runtime_error("Number of variables parsed (" + to_string(formula->variablesSeen.size()) + ") does not match expected number of variables (" + to_string(formula->numVariables) + ")");
     }
     
     return formula;
@@ -122,7 +126,7 @@ bool CNFParser::parseProblemLine(const std::string& line, int& numVars, int& num
 }
 
 // clause line format: integers (0 denotes end of clause)
-Clause CNFParser::parseClause(const std::string& line) {
+Clause CNFParser::parseClause(const std::string& line, CNFFormula& formula) {
     Clause clause;
     istringstream iss(line);
     int literal;
@@ -132,6 +136,7 @@ Clause CNFParser::parseClause(const std::string& line) {
             break;
         }
         clause.addLiteral(literal);
+        formula.variablesSeen.insert(std::abs(literal));
     }
     
     return clause;
