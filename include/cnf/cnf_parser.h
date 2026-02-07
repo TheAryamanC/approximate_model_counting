@@ -1,3 +1,5 @@
+// Header for CNF parser
+
 #ifndef CNF_PARSER_H
 #define CNF_PARSER_H
 
@@ -14,7 +16,7 @@ class CNFParser {
 public:
     // check if a file returns a valid CNF formula
     static bool validateFile(const std::string& filename);
-    
+
     // parse file and return a CNFFormula object
     static std::unique_ptr<CNFFormula> parseFile(const std::string& filename);
 

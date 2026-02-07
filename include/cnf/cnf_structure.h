@@ -1,3 +1,5 @@
+// Header for CNF formula structure
+
 #ifndef CNF_STRUCTURE_H
 #define CNF_STRUCTURE_H
 

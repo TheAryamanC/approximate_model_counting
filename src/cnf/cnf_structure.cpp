@@ -1,3 +1,5 @@
+// Source file for CNF formula and clause structure implementation
+
 #include "cnf/cnf_structure.h"
 #include <algorithm>
 #include <cmath>

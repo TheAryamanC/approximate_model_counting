@@ -1,3 +1,5 @@
+// Main entry point for the program
+
 #include <iostream>
 #include <string>
 #include <memory>

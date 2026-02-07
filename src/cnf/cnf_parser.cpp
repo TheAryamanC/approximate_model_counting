@@ -1,3 +1,5 @@
+// Source file for CNFParser class implementation
+
 #include "cnf/cnf_parser.h"
 #include <fstream>
 #include <sstream>
@@ -90,10 +92,8 @@ unique_ptr<CNFFormula> CNFParser::parseString(const std::string& content) {
     }
     //// number of variables
     unordered_set<int> variables = formula->getVariables();
-    for (int var : variables) {
-        if (var > formula->numVariables) {
-            throw runtime_error("Variable " + to_string(var) + " exceeds the number of variables specified in the problem line (" + to_string(formula->numVariables) + ")");
-        }
+    if (static_cast<int>(variables.size()) != formula->numVariables) {
+        throw runtime_error("Number of variables parsed (" + to_string(variables.size()) + ") does not match expected number of variables (" + to_string(formula->numVariables) + ")");
     }
     
     return formula;
@@ -104,16 +104,24 @@ bool CNFParser::parseProblemLine(const std::string& line, int& numVars, int& num
     istringstream iss(line);
     string p, cnf;
     
-    iss >> p >> cnf >> numVars >> numClauses;
+    // get the four expected parts and verify they were parsed correctly
+    if (!(iss >> p >> cnf >> numVars >> numClauses)) {
+        return false;
+    }
+    if (p != "p" || cnf != "cnf" || numVars < 0 || numClauses < 0) {
+        return false;
+    }
     
-    if (p != "p" || cnf != "cnf" || numVars <= 0 || numClauses < 0) {
+    // there should be no extra content after the expected four parts
+    string extra;
+    if (iss >> extra) {
         return false;
     }
     
     return true;
 }
 
-// clause line format: integers with 0 at end
+// clause line format: integers (0 denotes end of clause)
 Clause CNFParser::parseClause(const std::string& line) {
     Clause clause;
     istringstream iss(line);
