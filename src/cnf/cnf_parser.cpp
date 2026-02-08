@@ -135,8 +135,15 @@ Clause CNFParser::parseClause(const std::string& line, CNFFormula& formula) {
         if (literal == 0) {
             break;
         }
+        
+        // Validate that the variable ID is within the expected range
+        int varId = std::abs(literal);
+        if (varId > formula.numVariables) {
+            throw runtime_error("Invalid literal " + to_string(literal) + ": variable ID " + to_string(varId) + " exceeds maximum " + to_string(formula.numVariables));
+        }
+        
         clause.addLiteral(literal);
-        formula.variablesSeen.insert(std::abs(literal));
+        formula.variablesSeen.insert(varId);
     }
     
     return clause;

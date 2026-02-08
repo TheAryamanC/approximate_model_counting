@@ -193,6 +193,31 @@ void testParseString_errorVariableCountTooMany() {
     }
 }
 
+void testParseString_errorLiteralExceedsMaxVariable() {
+    string invalidCNF = 
+        "p cnf 3 2\n"
+        "1 2 0\n"
+        "1 5 0\n";  // Variable 5 exceeds max of 3
+    try {
+        CNFParser::parseString(invalidCNF);
+        assert(false && "Should have thrown exception for literal exceeding max variable");
+    } catch (const runtime_error& e) {
+        assert(string(e.what()).find("exceeds maximum") != string::npos);
+    }
+}
+
+void testParseString_errorNegativeLiteralExceedsMaxVariable() {
+    string invalidCNF = 
+        "p cnf 2 1\n"
+        "-10 1 0\n";  // Variable 10 exceeds max of 2
+    try {
+        CNFParser::parseString(invalidCNF);
+        assert(false && "Should have thrown exception for negative literal exceeding max variable");
+    } catch (const runtime_error& e) {
+        assert(string(e.what()).find("exceeds maximum") != string::npos);
+    }
+}
+
 void testParseString_errorWrongFirstToken() {
     string invalidProblem = "q cnf 4 3\n1 0\n2 0\n3 0\n";
     try {
@@ -300,6 +325,8 @@ void testParseString() {
     testParseString_errorClauseCountTooMany();
     testParseString_errorVariableCountTooFew();
     testParseString_errorVariableCountTooMany();
+    testParseString_errorLiteralExceedsMaxVariable();
+    testParseString_errorNegativeLiteralExceedsMaxVariable();
     testParseString_errorWrongFirstToken();
     testParseString_errorWrongSecondToken();
     testParseString_errorNonIntegerVariables();
