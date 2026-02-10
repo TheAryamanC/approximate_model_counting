@@ -23,13 +23,13 @@ XORSolutionResult PartialAssignment::solveXORSystem(const vector<XORConstraint>&
     // rows are XOR constraints, columns are variables + RHS
     vector<vector<int>> matrix;
     vector<int> rhs;
-    for (const auto& xor : xors) {
+    for (const auto& xor_constraint : xors) {
         vector<int> row(numVariables, 0);
-        for (int var : xor.variables) {
+        for (int var : xor_constraint.variables) {
             row[var - 1] = 1;
         }
         matrix.push_back(row);
-        rhs.push_back(xor.value ? 1 : 0);
+        rhs.push_back(xor_constraint.value ? 1 : 0);
     }
     
     return gaussianElimination(matrix, rhs, numVariables);
@@ -38,7 +38,7 @@ XORSolutionResult PartialAssignment::solveXORSystem(const vector<XORConstraint>&
 XORSolutionResult PartialAssignment::gaussianElimination(vector<vector<int>>& matrix, vector<int>& rhs, int numVariables) {
     XORSolutionResult result;
 
-    // If there are no rows (no constraints), this is trivially satisfiable
+    // if there are no rows (no constraints), this is trivially satisfiable
     int numRows = matrix.size();
     if (numRows == 0) {
         result.satisfiable = true;
