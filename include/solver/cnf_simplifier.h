@@ -26,16 +26,10 @@ struct SimplificationResult {
 class CNFSimplifier {
 public:
     // Apply partial assignment to simplify the CNF formula
-    static SimplificationResult applyAssignment(
-        const CNFFormula& formula, 
-        const std::unordered_map<int, int>& assignment
-    );
+    static SimplificationResult applyAssignment(const CNFFormula& formula, const std::unordered_map<int, int>& assignment);
     
     // Apply XOR solution result to simplify CNF
-    static SimplificationResult applyXORSolution(
-        const CNFFormula& formula,
-        const XORSolutionResult& xorSolution
-    );
+    static SimplificationResult applyXORSolution(const CNFFormula& formula, const XORSolutionResult& xorSolution);
     
     // Check if a literal is satisfied by the assignment
     static bool isLiteralSatisfied(Literal lit, const std::unordered_map<int, int>& assignment);
