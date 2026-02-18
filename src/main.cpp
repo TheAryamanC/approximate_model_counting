@@ -9,6 +9,7 @@
 #include "xor/xor_hash_generator.h"
 #include "solver/partial_assignment.h"
 #include "solver/cnf_simplifier.h"
+#include "solver/approximate_counter.h"
 
 using namespace std;
 
@@ -64,6 +65,27 @@ int main(int argc, char* argv[]) {
             cout << "    Simplified: " << simplificationResult.simplified.getNumClauses() << " clauses" << endl;
             double reductionPercent = 100.0 * simplificationResult.clausesRemoved / formula->getNumClauses();
             cout << "    Reduction: " << reductionPercent << "%" << endl;
+        }
+        
+        // Phase 4: Approximate Model Counting with Multiple Trials
+        cout << "=== Phase 4: Approximate Model Counting ===" << endl;
+        
+        int numTrials = 10;
+        int trialsXORs = 3;
+        double trialsDensity = 0.1;
+        
+        auto countResult = ApproximateCounter::approximateCount(*formula, numTrials, trialsXORs, trialsDensity);
+
+        cout << "Approximate Count Results:" << endl;
+        cout << "  Estimated Solutions: " << countResult.estimatedCount << endl;
+        cout << "  Average Solutions (successful trials): " << countResult.averageCount << endl;
+        cout << "  Successful Trials: " << countResult.successfulTrials << "/" << countResult.totalTrials << endl;
+        cout << "  Trial Counts: ";
+        for (size_t i = 0; i < countResult.trialCounts.size(); i++) {
+            cout << countResult.trialCounts[i];
+            if (i < countResult.trialCounts.size() - 1) {
+                cout << ", ";
+            }
         }
         
         return 0;
